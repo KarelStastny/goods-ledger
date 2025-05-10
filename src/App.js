@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+//@@viewOn:imports
+
+//@@viewOff:imports
+
+//@@viewOn:constants
+const APP_NAME = "Resale App";
+//@@viewOff:constants
 
 function App() {
+  //@@viewOn:private
+
+  //@@viewOff:private
+
+  //@@viewOn:render
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="app">
+      <header className="app-header">
+        <h1>{APP_NAME}</h1>
       </header>
+      <main className="app-content">
+      
+      </main>
     </div>
   );
+  //@@viewOff:render
 }
 
 export default App;
