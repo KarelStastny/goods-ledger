@@ -11,6 +11,11 @@ const tableData = [
     quantity: 10,
     price: 100,
     date: "2023-01-01",
+    actionList: [
+      { label: "Edit", onClick: (row) => alert(`Edit ${row.name}`) },
+      { label: "Delete", onClick: (row) => alert(`Delete ${row.name}`), collapsed: true },
+      { label: "Duplicate", onClick: (row) => alert(`Duplicate ${row.name}`), collapsed: true },
+    ],
   },
   {
     id: 2,
@@ -18,22 +23,21 @@ const tableData = [
     quantity: 20,
     price: 200,
     date: "2023-02-01",
-  },
-  {
-    id: 3,
-    name: "Product 3",
-    quantity: 30,
-    price: 300,
-    date: "2023-03-01",
+    actionList: [
+      { label: "View", onClick: (row) => alert(`View ${row.name}`) },
+      { label: "Archive", onClick: (row) => alert(`Archive ${row.name}`), collapsed: true },
+    ],
   },
 ];
+
 
 const columnsDefinition = [
   { Header: "ID", accessor: "id" },
   { Header: "Name", accessor: "name" },
   { Header: "Quantity", accessor: "quantity" },
-  { Header: "Price", accessor: "price" },
+  { Header: "Price", accessor: "price", cell: (row) => `${row.price} EUR`, },
   { Header: "Date", accessor: "date" },
+
 ];
 //@@viewOff:constants
 
