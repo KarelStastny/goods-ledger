@@ -1,4 +1,5 @@
 //@@viewOn:imports
+import GoodsLedger from "./goods-ledger/GoodsLedger";
 
 //@@viewOff:imports
 
@@ -18,7 +19,7 @@ function App() {
         <h1>{APP_NAME}</h1>
       </header>
       <main className="app-content">
-      
+        <GoodsLedger />
       </main>
     </div>
   );
