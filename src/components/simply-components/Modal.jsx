@@ -1,5 +1,6 @@
 //@@viewOn:imports
 import React from "react";
+import Pending from "./Pending";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -79,7 +80,8 @@ function Modal({
 
         {/* Content */}
         <div style={{ padding: "24px" }}>
-          {content}
+
+          {content ? content : <Pending />}
         </div>
 
         {/* Footer */}

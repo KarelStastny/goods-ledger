@@ -10,7 +10,7 @@ import Popover from "../simply-components/Popover";
 //@@viewOn:helpers
 //@@viewOff:helpers
 
-function Table({ columnsDefinition = [], data = [], header = "header", layout = "block" }) {
+function Table({ columnsDefinition = [], data = [], blockActions=[], header = "header", layout = "block" }) {
   const [openPopoverIndex, setOpenPopoverIndex] = useState(null);
 
   //@@viewOn:render
@@ -24,11 +24,14 @@ function Table({ columnsDefinition = [], data = [], header = "header", layout = 
             fontSize: 18,
             borderBottom: "1px solid #eee",
             position: "relative",
-          
             zIndex: 1,
           }}
         >
           {header}
+          {blockActions &&
+            blockActions.map((action, i) => (
+              <Button key={i} style={{ marginBottom: 4 }} onClick={action.onClick} onClose={action.onClose}>{action.label}</Button>
+            ))}
         </div>
       )}
       <table style={{ width: "100%", borderCollapse: "collapse" }}>

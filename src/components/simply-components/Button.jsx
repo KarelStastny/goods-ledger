@@ -8,11 +8,11 @@ import React from "react";
 //@@viewOn:helpers
 //@@viewOff:helpers
 
-function Button({ children, onClick, style = {}, ...props }) {
+function Button({ children, onClick, onClose, style = {}, ...props }) {
   //@@viewOn:render
   return (
     <button
-      onClick={onClick}
+      onClick={onClick || onClose}
       style={{
         padding: "6px 10px",
         backgroundColor: "#eee",
