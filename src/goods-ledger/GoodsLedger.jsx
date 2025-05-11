@@ -1,5 +1,6 @@
 //@@viewOn:imports
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
+import { getItems } from "./firebase/items";
 import Table from "../components/table/Table";
 import Modal from "../components/simply-components/Modal";
 import CreateForm from "./CreateForm";
@@ -73,6 +74,17 @@ const columnsDefinition = [
 
 function GoodsLedger() {
   const [createModal, setCreateModal] = useState({ open: false });
+
+
+ 
+  useEffect(() => {
+    getItems();
+
+    console.log(getItems());
+  }, []);
+
+  
+
   //@@viewOn:render
   return (
     <div>

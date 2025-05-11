@@ -1,7 +1,6 @@
-
-
 //@@viewOn:imports
 import React from "react";
+import { createItem } from "./firebase/items";
 import Form from "../components/simply-components/Form";
 //@@viewOff:imports
 
@@ -17,9 +16,13 @@ const fields = [
 //@@viewOff:helpers
 
 function CreateForm() {
-  const handleSubmit = (data) => {
-    console.log("Odesláno:", data);
-    // sem později přidáš volání Firebase, validace, modaly, atd.
+  const handleSubmit = async (data) => {
+    try {
+      await createItem(data);
+      console.log("Uloženo do Firestore!", data);
+    } catch (err) {
+      console.error("Chyba při ukládání do Firestore:", err);
+    }
   };
 
   //@@viewOn:render

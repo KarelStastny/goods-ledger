@@ -17,9 +17,13 @@ function Form({ fields = [], onSubmit }) {
     setFormData((prev) => ({ ...prev, [name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit?.(formData);
+    try {
+      await onSubmit?.(formData);
+    } catch (err) {
+      console.error("Chyba při odeslání formuláře:", err);
+    }
   };
 
   //@@viewOn:render
