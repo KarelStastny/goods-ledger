@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Table from "../components/table/Table";
 import Modal from "../components/simply-components/Modal";
+import CreateForm from "./CreateForm";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -90,7 +91,7 @@ function GoodsLedger() {
         open={createModal.open}
         onClose={() => setCreateModal({ open: false })}
         header="Create New Entry"
-        content={""}
+        content={<CreateForm />}
         footer={<div>Footer goes here</div>}
         showCloseButton={true}
         showSubmitButton={false}
