@@ -1,6 +1,7 @@
 //@@viewOn:imports
 import React from "react";
 import Table from "../components/table/Table";
+import Modal from "../components/simply-components/Modal";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -26,17 +27,21 @@ const tableData = [
     actionList: [
       { label: "View", onClick: (row) => alert(`View ${row.name}`) },
       { label: "Archive", onClick: (row) => alert(`Archive ${row.name}`), collapsed: true },
+      { label: "Archive", onClick: (row) => alert(`Archive ${row.name}`), collapsed: true },
+      { label: "Archive", onClick: (row) => alert(`Archive ${row.name}`), collapsed: true },
+      { label: "Archive", onClick: (row) => alert(`Archive ${row.name}`), collapsed: true },
+      
     ],
   },
 ];
 
 
 const columnsDefinition = [
-  { Header: "ID", accessor: "id" },
-  { Header: "Name", accessor: "name" },
-  { Header: "Quantity", accessor: "quantity" },
-  { Header: "Price", accessor: "price", cell: (row) => `${row.price} EUR`, },
-  { Header: "Date", accessor: "date" },
+  { Header: "ID", key: "id" },
+  { Header: "Name", key: "name" },
+  { Header: "Quantity", key: "quantity" },
+  { Header: "Price", key: "price", cell: (row) => `${row.price} EUR`, },
+  { Header: "Date", key: "date" },
 
 ];
 //@@viewOff:constants
@@ -49,6 +54,15 @@ function GoodsLedger() {
   return (
     <div>
       <Table data={tableData} columnsDefinition={columnsDefinition} />
+  <Modal
+        open={false}
+        onClose={() => {}}
+        header="Goods Ledger"
+        content={<div>Content goes here</div>}
+       footer={<div>Footer goes here</div>}
+        showCloseButton={true}
+        showSubmitButton={false}
+      />
     </div>
   );
   //@@viewOff:render
