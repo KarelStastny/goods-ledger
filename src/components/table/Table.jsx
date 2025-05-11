@@ -10,19 +10,38 @@ import Popover from "../simply-components/Popover";
 //@@viewOn:helpers
 //@@viewOff:helpers
 
-function Table({ columnsDefinition = [], data = [] }) {
+function Table({ columnsDefinition = [], data = [], header = "header", layout = "block" }) {
   const [openPopoverIndex, setOpenPopoverIndex] = useState(null);
 
   //@@viewOn:render
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative", margin: layout === "block" ? "16px" : 0, border: layout === "block" ? "1px solid #ccc" : "none", borderRadius: layout === "block" ? 6 : 0, overflow: "hidden", backgroundColor: "#fff", boxShadow: layout === "block" ? "0 4px 10px rgba(0,0,0,0.25)" : "none" }}>
+      {header && (
+        <div
+          style={{
+            padding: "16px 24px",
+            fontWeight: "bold",
+            fontSize: 18,
+            borderBottom: "1px solid #eee",
+            position: "relative",
+          
+            zIndex: 1,
+          }}
+        >
+          {header}
+        </div>
+      )}
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr>
             {columnsDefinition.map((col) => (
               <th
-                key={col.accessor}
-                style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}
+                key={col.key}
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  textAlign: "left",
+                  padding: "8px",
+                }}
               >
                 {col.Header}
               </th>
@@ -49,8 +68,11 @@ function Table({ columnsDefinition = [], data = [] }) {
             return (
               <tr key={row.id ?? rowIndex}>
                 {columnsDefinition.map((col) => (
-                  <td key={col.accessor} style={{ padding: "8px", borderBottom: "1px solid #eee" }}>
-                    {col.cell ? col.cell(row) : row[col.accessor]}
+                  <td
+                    key={col.key}
+                    style={{ padding: "8px", borderBottom: "1px solid #eee" }}
+                  >
+                    {col.cell ? col.cell(row) : row[col.key]}
                   </td>
                 ))}
                 <td
@@ -71,7 +93,9 @@ function Table({ columnsDefinition = [], data = [] }) {
                   {collapsedActions.length > 0 && (
                     <span
                       onClick={() =>
-                        setOpenPopoverIndex(openPopoverIndex === rowIndex ? null : rowIndex)
+                        setOpenPopoverIndex(
+                          openPopoverIndex === rowIndex ? null : rowIndex
+                        )
                       }
                       style={{
                         cursor: "pointer",
