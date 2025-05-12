@@ -1,0 +1,14 @@
+/* Reset základního okraje, paddingu a pozadí */
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #121212; /* nebo import z palette */
+  color: #fff;
+  font-family: sans-serif;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}

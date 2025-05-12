@@ -2,87 +2,114 @@
 import React, { useState } from "react";
 import Button from "../simply-components/Button";
 import Popover from "../simply-components/Popover";
+import COLORS from "../styles/palette";
 //@@viewOff:imports
 
-//@@viewOn:constants
-//@@viewOff:constants
+//@@viewOn:css
+const Css = {
+  container: {
+    position: "relative",
+    margin: "16px",
+    border: `1px solid ${COLORS.border}`,
+    borderRadius: 6,
+    overflow: "hidden",
+    backgroundColor: COLORS.surface,
+    boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+  },
+  header: {
+    padding: "16px 24px",
+    fontWeight: "bold",
+    fontSize: 18,
+    borderBottom: `1px solid ${COLORS.border}`,
+    position: "relative",
+    zIndex: 1,
+    color: COLORS.textPrimary,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  actionsRow: {
+    display: "flex",
+    gap: "8px",
+  },
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+    color: COLORS.textPrimary,
+  },
+  th: {
+    borderBottom: `1px solid ${COLORS.border}`,
+    textAlign: "left",
+    padding: "10px 12px",
+    backgroundColor: COLORS.surface,
+    color: COLORS.textSecondary,
+    fontWeight: "600",
+    fontSize: "14px",
+  },
+  td: {
+    padding: "10px 12px",
+    borderBottom: `1px solid ${COLORS.border}`,
+    color: COLORS.textPrimary,
+    fontSize: "14px",
+  },
+  tdActions: {
+    padding: "10px 12px",
+    borderBottom: `1px solid ${COLORS.border}`,
+    position: "relative",
+    textAlign: "right",
+    whiteSpace: "nowrap",
+  },
+  actionIcon: {
+    cursor: "pointer",
+    display: "inline-block",
+    padding: "4px 6px",
+    fontSize: "18px",
+    userSelect: "none",
+    color: COLORS.primary,
+  },
+};
+//@@viewOff:css
 
-//@@viewOn:helpers
-//@@viewOff:helpers
-
+//@@viewOn:component
 function Table({
   columnsDefinition = [],
   data = [],
   blockActions = [],
-  header = "header",
+  header = "Tabulka",
   layout = "block",
 }) {
   const [openPopoverIndex, setOpenPopoverIndex] = useState(null);
 
-  //@@viewOn:render
   return (
-    <div
-      style={{
-        position: "relative",
-        margin: layout === "block" ? "16px" : 0,
-        border: layout === "block" ? "1px solid #ccc" : "none",
-        borderRadius: layout === "block" ? 6 : 0,
-        overflow: "hidden",
-        backgroundColor: "#fff",
-        boxShadow: layout === "block" ? "0 4px 10px rgba(0,0,0,0.25)" : "none",
-      }}
-    >
+    <div style={Css.container}>
       {header && (
-        <div
-          style={{
-            padding: "16px 24px",
-            fontWeight: "bold",
-            fontSize: 18,
-            borderBottom: "1px solid #eee",
-            position: "relative",
-            zIndex: 1,
-          }}
-        >
-          {header}
-          {blockActions &&
-            blockActions.map((action, i) => (
-              <Button
-                key={i}
-                style={{ marginBottom: 4 }}
-                onClick={action.onClick}
-                onClose={action.onClose}
-              >
-                {action.label}
-              </Button>
-            ))}
+        <div style={Css.header}>
+          <span>{header}</span>
+          {blockActions.length > 0 && (
+            <div style={Css.actionsRow}>
+              {blockActions.map((action, i) => (
+                <Button
+                  key={i}
+                  onClick={action.onClick}
+                  onClose={action.onClose}
+                >
+                  {action.label}
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
       )}
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+
+      <table style={Css.table}>
         <thead>
           <tr>
             {columnsDefinition.map((col) => (
-              <th
-                key={col.key}
-                style={{
-                  borderBottom: "1px solid #ccc",
-                  textAlign: "left",
-                  padding: "8px",
-                }}
-              >
+              <th key={col.key} style={Css.th}>
                 {col.Header}
               </th>
             ))}
-            <th
-              style={{
-                borderBottom: "1px solid #ccc",
-                textAlign: "right",
-                padding: "8px",
-                width: "1%",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Actions
-            </th>
+            <th style={{ ...Css.th, textAlign: "right" }}>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -94,22 +121,11 @@ function Table({
             return (
               <tr key={row.id ?? rowIndex}>
                 {columnsDefinition.map((col) => (
-                  <td
-                    key={col.key}
-                    style={{ padding: "8px", borderBottom: "1px solid #eee" }}
-                  >
+                  <td key={col.key} style={Css.td}>
                     {col.cell ? col.cell(row) : row[col.key]}
                   </td>
                 ))}
-                <td
-                  style={{
-                    padding: "8px",
-                    borderBottom: "1px solid #eee",
-                    position: "relative",
-                    textAlign: "right",
-                    whiteSpace: "nowrap",
-                  }}
-                >
+                <td style={Css.tdActions}>
                   {visibleActions.map((action, i) => (
                     <Button
                       key={i}
@@ -132,14 +148,8 @@ function Table({
                           openPopoverIndex === rowIndex ? null : rowIndex
                         )
                       }
-                      style={{
-                        cursor: "pointer",
-                        display: "inline-block",
-                        padding: "4px 6px",
-                        fontSize: "18px",
-                        userSelect: "none",
-                      }}
-                      title="More actions"
+                      style={Css.actionIcon}
+                      title="Více akcí"
                     >
                       ⋮
                     </span>
@@ -148,7 +158,7 @@ function Table({
                   {openPopoverIndex === rowIndex && (
                     <Popover>
                       {collapsedActions.map((action, i) => (
-                        <div key={i} style={{ marginBottom: 4 }}>
+                        <div key={i}>
                           <Button
                             onClick={() => {
                               if (action.confirm) {
@@ -173,7 +183,7 @@ function Table({
       </table>
     </div>
   );
-  //@@viewOff:render
 }
+//@@viewOff:component
 
 export default Table;

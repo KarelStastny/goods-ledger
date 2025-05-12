@@ -1,5 +1,5 @@
 // Globální barvy pro dark theme
-const COLORS = {
+const palette = {
   background: "#121212",
   surface: "#1E1E1E",
   primary: "#BB86FC",
@@ -10,6 +10,7 @@ const COLORS = {
   border: "#2C2C2C",
   hover: "#333333",
   disabled: "#3A3A3A",
+  inputBackground: "#1E1E1E",
 };
 
-export default COLORS;
+export default palette;
