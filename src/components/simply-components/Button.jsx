@@ -1,33 +1,19 @@
 //@@viewOn:imports
 import React from "react";
+import { getButtonStyles } from "../styles/theme.js"; // přímý import stylů
 //@@viewOff:imports
 
-//@@viewOn:constants
-//@@viewOff:constants
+function Button({ children, onClick, variant = "filled", disabled = false, style = {}, ...props }) {
+  const combinedStyles = {
+    ...getButtonStyles({ variant, disabled }),
+    ...style,
+  };
 
-//@@viewOn:helpers
-//@@viewOff:helpers
-
-function Button({ children, onClick, onClose, style = {}, ...props }) {
-  //@@viewOn:render
   return (
-    <button
-      onClick={onClick || onClose}
-      style={{
-        padding: "6px 10px",
-        backgroundColor: "#eee",
-        border: "1px solid #ccc",
-        borderRadius: "4px",
-        cursor: "pointer",
-        marginRight: "4px",
-        ...style,
-      }}
-      {...props}
-    >
+    <button onClick={onClick} style={combinedStyles} disabled={disabled} {...props}>
       {children}
     </button>
   );
-  //@@viewOff:render
 }
 
 export default Button;
