@@ -18,7 +18,7 @@ function Popover({ children, style = {} }) {
         boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
         padding: "8px",
         borderRadius: "4px",
-        zIndex: 10,
+        zIndex: 10000,
         ...style,
       }}
     >

@@ -6,30 +6,37 @@ import Form from "../components/simply-components/Form";
 
 //@@viewOn:constants
 const fields = [
-  { name: "name", label: "Název produktu", placeholder: "Zadej název" },
-  { name: "quantity", label: "Množství", type: "number", defaultValue: 1 },
-  { name: "price", label: "Cena", type: "number" },
+  { name: "buyDate", label: "Datum nákupu", type: "date" },
+  {
+    name: "name",
+    label: "Název produktu",
+    placeholder: "Zadej název",
+    required: true,
+  },
+  {
+    name: "quantity",
+    label: "Množství",
+    type: "number",
+    defaultValue: 1,
+    required: true,
+  },
+  { name: "buyPrice", label: "Nákupní cena", type: "number", required: true },
+  { name: "description", label: "Popis produktu", type: "textArea", required: false },
+  { name: "saleStartDate", label: "Zahájení prodeje", type: "date" },
 ];
+
 //@@viewOff:constants
 
 //@@viewOn:helpers
 //@@viewOff:helpers
 
-function CreateForm() {
-  const handleSubmit = async (data) => {
-    try {
-      await createItem(data);
-      console.log("Uloženo do Firestore!", data);
-    } catch (err) {
-      console.error("Chyba při ukládání do Firestore:", err);
-    }
-  };
+function CreateForm({ handleSubmitCreateButton }) {
+
 
   //@@viewOn:render
   return (
     <div>
-      <h2>Vytvořit položku</h2>
-      <Form fields={fields} onSubmit={handleSubmit} />
+      <Form fields={fields} onSubmit={handleSubmitCreateButton} />
     </div>
   );
   //@@viewOff:render

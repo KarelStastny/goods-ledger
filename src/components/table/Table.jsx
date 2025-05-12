@@ -10,12 +10,28 @@ import Popover from "../simply-components/Popover";
 //@@viewOn:helpers
 //@@viewOff:helpers
 
-function Table({ columnsDefinition = [], data = [], blockActions=[], header = "header", layout = "block" }) {
+function Table({
+  columnsDefinition = [],
+  data = [],
+  blockActions = [],
+  header = "header",
+  layout = "block",
+}) {
   const [openPopoverIndex, setOpenPopoverIndex] = useState(null);
 
   //@@viewOn:render
   return (
-    <div style={{ position: "relative", margin: layout === "block" ? "16px" : 0, border: layout === "block" ? "1px solid #ccc" : "none", borderRadius: layout === "block" ? 6 : 0, overflow: "hidden", backgroundColor: "#fff", boxShadow: layout === "block" ? "0 4px 10px rgba(0,0,0,0.25)" : "none" }}>
+    <div
+      style={{
+        position: "relative",
+        margin: layout === "block" ? "16px" : 0,
+        border: layout === "block" ? "1px solid #ccc" : "none",
+        borderRadius: layout === "block" ? 6 : 0,
+        overflow: "hidden",
+        backgroundColor: "#fff",
+        boxShadow: layout === "block" ? "0 4px 10px rgba(0,0,0,0.25)" : "none",
+      }}
+    >
       {header && (
         <div
           style={{
@@ -30,7 +46,14 @@ function Table({ columnsDefinition = [], data = [], blockActions=[], header = "h
           {header}
           {blockActions &&
             blockActions.map((action, i) => (
-              <Button key={i} style={{ marginBottom: 4 }} onClick={action.onClick} onClose={action.onClose}>{action.label}</Button>
+              <Button
+                key={i}
+                style={{ marginBottom: 4 }}
+                onClick={action.onClick}
+                onClose={action.onClose}
+              >
+                {action.label}
+              </Button>
             ))}
         </div>
       )}
@@ -88,7 +111,16 @@ function Table({ columnsDefinition = [], data = [], blockActions=[], header = "h
                   }}
                 >
                   {visibleActions.map((action, i) => (
-                    <Button key={i} onClick={() => action.onClick(row)}>
+                    <Button
+                      key={i}
+                      onClick={() => {
+                        if (action.confirm) {
+                          const ok = window.confirm(action.confirm);
+                          if (!ok) return;
+                        }
+                        action.onClick(row);
+                      }}
+                    >
                       {action.label}
                     </Button>
                   ))}
@@ -119,6 +151,10 @@ function Table({ columnsDefinition = [], data = [], blockActions=[], header = "h
                         <div key={i} style={{ marginBottom: 4 }}>
                           <Button
                             onClick={() => {
+                              if (action.confirm) {
+                                const ok = window.confirm(action.confirm);
+                                if (!ok) return;
+                              }
                               action.onClick(row);
                               setOpenPopoverIndex(null);
                             }}

@@ -1,5 +1,5 @@
 //@@viewOn:imports
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { db } from "./firebase";
 //@@viewOff:imports
 
@@ -27,4 +27,10 @@ export async function getItems() {
   const items = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   console.log("Načteno z Firebase:", items);
   return items;
+}
+
+export async function deleteItem(id) {
+  const docRef = doc(db, "goods", id);
+  await deleteDoc(docRef);
+  console.log(`Dokument s ID ${id} byl úspěšně smazán.`);
 }

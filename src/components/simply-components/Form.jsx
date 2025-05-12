@@ -38,6 +38,7 @@ function Form({ fields = [], onSubmit }) {
             onChange={(e) => handleChange(e, field.name)}
             placeholder={field.placeholder}
             style={{ padding: "8px", width: "100%", boxSizing: "border-box" }}
+            required={field.required}
           />
         </div>
       ))}

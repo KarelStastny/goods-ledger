@@ -4,15 +4,18 @@ import GoodsProvider, { useGoods } from "./Provider"; // importuj hook
 import Table from "../components/table/Table";
 import Modal from "../components/simply-components/Modal";
 import CreateForm from "./CreateForm";
+import { renderers } from "../components/tools/renderers";
 //@@viewOff:imports
 
 //@@viewOn:constants
 const columnsDefinition = [
-  { Header: "ID", key: "id" },
+  { Header: "Date", key: "buyDate" },
+  { Header: "ID", key: "id", cell:(row) => renderers.tooltip(row.id, 3) },
   { Header: "Name", key: "name" },
   { Header: "Quantity", key: "quantity" },
-  { Header: "Price", key: "price", cell: (row) => `${row.price} EUR` },
-  { Header: "Date", key: "date" },
+  { Header: "Nákupní cena", key: "buyPrice", cell: (row) => `${row.buyPrice} Kč` },
+  { Header: "description", key: "description" },
+  { Header: "Zahájení prodeje", key: "saleStartDate" },
 ];
 //@@viewOff:constants
 
@@ -21,7 +24,6 @@ const columnsDefinition = [
 
 function GoodsLedger() {
   // const { data, state, error } = useGoods();
-  const [createModal, setCreateModal] = useState({ open: false });
 
   // if (state === "pending") return <div>Načítám...</div>;
   // if (state === "error") return <div>Chyba: {error.message}</div>;
@@ -30,7 +32,14 @@ function GoodsLedger() {
   return (
     <div>
       <GoodsProvider>
-        {({ data }) => {
+        {({
+          data,
+          reload,
+          createModal,
+          setCreateModal,
+          onClose,
+          handleSubmitCreateButton,
+        }) => {
           console.log(data);
           return (
             <div>
@@ -38,19 +47,25 @@ function GoodsLedger() {
                 data={data}
                 columnsDefinition={columnsDefinition}
                 layout="default"
+                header="Seznam všech položek"
                 blockActions={[
                   {
-                    label: "Test",
+                    label: "Vytvořit novou položku",
                     onClick: () => setCreateModal({ open: true }),
                   },
                 ]}
               />
               <Modal
                 open={createModal.open}
-                onClose={() => setCreateModal({ open: false })}
-                header="Create New Entry"
-                content={<CreateForm />}
-                footer={<div>Footer goes here</div>}
+                onClose={() => onClose()}
+                header="Vytvořit novou položku"
+                content={
+                  <CreateForm
+                    reload={reload}
+                    onClose={() => onClose()}
+                    handleSubmitCreateButton={handleSubmitCreateButton}
+                  />
+                }
                 showCloseButton={true}
                 showSubmitButton={false}
               />
