@@ -1,12 +1,7 @@
 //@@viewOn:imports
-import React, {
-  useEffect,
-  useState,
-  createContext,
-  useContext,
-  useMemo,
-} from "react";
-import { createItem, deleteItem, getItems } from "./firebase/items"; // tvoje funkce pro načtení z Firestore
+import { useEffect, useState, createContext, useContext, useMemo } from "react";
+import { getAllItems, deleteItem, createItem } from "./firebase/calls";
+import useAsyncCall from "../hooks/useAsyncCall";
 //@@viewOff:imports
 
 //@@viewOn:context
@@ -15,47 +10,54 @@ const GoodsContext = createContext(null);
 
 //@@viewOn:provider
 function GoodsProvider({ children }) {
+  const { call: createItemCall, alert } = useAsyncCall(createItem);
+  const { call: deleteItemCall } = useAsyncCall(deleteItem);
+
   const [data, setData] = useState([]);
-  const [state, setState] = useState("pending");
+
   const [error, setError] = useState(null);
   const [createModal, setCreateModal] = useState({ open: false });
+  const [editModal, setEditModal] = useState({ open: false });
 
   const load = async () => {
-    setState("pending");
     try {
-      const items = await getItems();
+      const items = await getAllItems();
       setData(items);
-      setState("ready");
     } catch (e) {
       console.error("Load failed:", e);
       setError(e);
-      setState("error");
     }
+  };
+
+  const handleCreateItem = async (data) => {
+    await createItemCall({
+      dtoIn: data,
+      successMessage: "Položka byla úspěšně vytvořena.",
+      errorMessage: "Nepodařilo se vytvořit položku.",
+      successCallback: async () => {
+        await load();
+        setCreateModal(null);
+      },
+      errorCallback: (err) => console.error("Chyba:", err),
+    });
+  };
+
+  const handleDeleteItem = async (id) => {
+    await deleteItemCall({
+      dtoIn: id,
+      successMessage: "Položka byla úspěšně smazána",
+      errorMessage: "Chyba při mazání položky",
+      successCallback: async () => {
+        await load();
+        setCreateModal(null);
+      },
+      errorCallback: (err) => console.error("Chyba:", err),
+    });
   };
 
   const onClose = () => {
     setCreateModal({ open: false });
   };
-
-  const handleSubmitCreateButton = async (data) => {
-    try {
-      await createItem(data);
-      await load();
-      onClose();
-      console.log("Uloženo do Firestore!", data);
-    } catch (err) {
-      console.error("Chyba při ukládání do Firestore:", err);
-    }
-  };
-
-  const handleDeleteItem = async (id) => {
-    try{
-      await deleteItem(id)
-      await load()
-    }catch (err) {
-      console.error("chyba Při smazání")
-    }
-  }
 
   const tableData = useMemo(() => {
     if (data.length === 0) return [];
@@ -63,10 +65,20 @@ function GoodsProvider({ children }) {
     return data.map((row) => {
       return {
         ...row,
-        actionList:[
-          {label: "Delete", onClick: () => handleDeleteItem(row.id), confirm: true, collapsed: true}
-        ]
-      
+        actionList: [
+          {
+            label: "Delete",
+            onClick: () => handleDeleteItem(row.id),
+            confirm: true,
+            collapsed: false,
+          },
+          {
+            label: "Edit",
+            onClick: () => setEditModal({ open: true }),
+            confirm: true,
+            collapsed: false,
+          },
+        ],
       };
     });
   }, [data]);
@@ -84,15 +96,15 @@ function GoodsProvider({ children }) {
   const value = useMemo(
     () => ({
       data: tableData,
-      state,
+      alert,
       error,
-      createModal,
-      setCreateModal,
+      modals: { createModal, setCreateModal, editModal, setEditModal },
+
       reload: load,
       onClose: onClose,
-      handleSubmitCreateButton,
+      handleCreateItem,
     }),
-    [data, state, error, createModal]
+    [data, error, createModal, alert]
   );
 
   return (
