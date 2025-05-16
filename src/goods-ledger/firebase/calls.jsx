@@ -19,6 +19,7 @@ const COLLECTION_NAME = "goods";
 //@@viewOff:helpers
 
 export async function createItem(itemData) {
+  console.log(itemData);
   const colRef = collection(db, COLLECTION_NAME);
   await addDoc(colRef, itemData);
 }
@@ -45,7 +46,7 @@ export async function getItem(id) {
   }
 }
 
-export async function updateItem(id, updatedData) {
+export async function updateItem({ id, updatedData }) {
   const docRef = doc(db, COLLECTION_NAME, id);
   await updateDoc(docRef, updatedData);
 }

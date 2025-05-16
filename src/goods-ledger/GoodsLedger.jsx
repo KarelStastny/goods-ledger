@@ -6,6 +6,7 @@ import Modal from "../components/simply-components/Modal";
 import CreateForm from "./CreateForm";
 import { renderers } from "../components/tools/renderers";
 import Alert from "../components/simply-components/Alert";
+import EditForm from "./EditForm";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -32,8 +33,7 @@ function GoodsLedger() {
   return (
     <div>
       <GoodsProvider>
-        {({ data, reload, modals, onClose, handleCreateItem, alert }) => {
-    
+        {({ data, reload, modals, onClose, handleCreateItem, alert, handleEditItem, dataItem, }) => {
           return (
             <div>
               <Table
@@ -57,7 +57,7 @@ function GoodsLedger() {
                   <CreateForm
                     reload={reload}
                     onClose={() => onClose()}
-                    handleSubmitCreateButton={handleCreateItem}
+                    onSubmit={handleCreateItem}
                   />
                 }
                 showCloseButton={true}
@@ -66,7 +66,19 @@ function GoodsLedger() {
 
               {/* Edit Modal */}
               <Modal
-              open={modals.editModal?.open} onClose={() => onClose()} header={"Editovat položku (přidat jení název)"}/>
+                open={modals.editModal?.open}
+                onClose={() => onClose()}
+                header={dataItem?.name || "Editovat Položku"}
+                content={
+                  <EditForm
+                    reload={reload}
+                    dataItem={dataItem}
+                    onClose={() => onClose()}
+                    onSubmit={handleEditItem}
+                  />
+                }
+                showSubmitButton={false}
+              />
 
               <Alert alert={alert} />
             </div>

@@ -49,13 +49,16 @@ const Css = {
 //@@viewOn:helpers
 //@@viewOff:helpers
 
-function Form({ fields = [], onSubmit }) {
-  const [formData, setFormData] = useState(() =>
-    fields.reduce(
-      (acc, field) => ({ ...acc, [field.name]: field.defaultValue || "" }),
-      {}
-    )
+function Form({ fields = [], onSubmit, initialValues }) {
+const [formData, setFormData] = useState(() => {
+  const base = fields.reduce(
+    (acc, field) => ({ ...acc, [field.name]: field.defaultValue || "" }),
+    {}
   );
+  return { ...base, ...initialValues };
+});
+
+
 
   const handleChange = (e, name) => {
     setFormData((prev) => ({ ...prev, [name]: e.target.value }));

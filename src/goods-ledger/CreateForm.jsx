@@ -21,8 +21,13 @@ const fields = [
     required: true,
   },
   { name: "buyPrice", label: "Nákupní cena", type: "number", required: true },
-  { name: "description", label: "Popis produktu", type: "textArea", required: false },
-  { name: "saleStartDate", label: "Zahájení prodeje", type: "date" },
+  {
+    name: "description",
+    label: "Popis produktu",
+    type: "textArea",
+    required: false,
+  },
+  { name: "saleStartDate", label: "Zahájení prodeje", type: "dropdown" },
 ];
 
 //@@viewOff:constants
@@ -30,13 +35,11 @@ const fields = [
 //@@viewOn:helpers
 //@@viewOff:helpers
 
-function CreateForm({ handleSubmitCreateButton }) {
-
-
+function CreateForm({ onSubmit }) {
   //@@viewOn:render
   return (
     <div>
-      <Form fields={fields} onSubmit={handleSubmitCreateButton} />
+      <Form fields={fields} onSubmit={onSubmit} />
     </div>
   );
   //@@viewOff:render

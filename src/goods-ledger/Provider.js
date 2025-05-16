@@ -1,6 +1,12 @@
 //@@viewOn:imports
 import { useEffect, useState, createContext, useContext, useMemo } from "react";
-import { getAllItems, deleteItem, createItem } from "./firebase/calls";
+import {
+  getAllItems,
+  deleteItem,
+  createItem,
+  getItem,
+  updateItem,
+} from "./firebase/calls";
 import useAsyncCall from "../hooks/useAsyncCall";
 //@@viewOff:imports
 
@@ -12,8 +18,10 @@ const GoodsContext = createContext(null);
 function GoodsProvider({ children }) {
   const { call: createItemCall, alert } = useAsyncCall(createItem);
   const { call: deleteItemCall } = useAsyncCall(deleteItem);
+  const { call: editItemCall } = useAsyncCall(updateItem);
 
   const [data, setData] = useState([]);
+  const [dataItem, setDataItem] = useState();
 
   const [error, setError] = useState(null);
   const [createModal, setCreateModal] = useState({ open: false });
@@ -29,6 +37,18 @@ function GoodsProvider({ children }) {
     }
   };
 
+  const loadOneItem = async (id) => {
+    try {
+      const item = await getItem(id);
+      setDataItem(item);
+      return item; // přidáno
+    } catch (e) {
+      console.error("Load failed:", e);
+      setError(e);
+      return null; // přidáno
+    }
+  };
+
   const handleCreateItem = async (data) => {
     await createItemCall({
       dtoIn: data,
@@ -41,22 +61,32 @@ function GoodsProvider({ children }) {
       errorCallback: (err) => console.error("Chyba:", err),
     });
   };
-
+const handleEditItem = async (formData) => {
+  await editItemCall({
+    dtoIn: { id: dataItem.id, updatedData: formData },
+    successMessage: "Položka byla upravena.",
+    errorMessage: "Úprava selhala.",
+    successCallback: () => {
+      load();
+      onClose();
+    },
+  });
+};
   const handleDeleteItem = async (id) => {
-    await deleteItemCall({
-      dtoIn: id,
-      successMessage: "Položka byla úspěšně smazána",
-      errorMessage: "Chyba při mazání položky",
-      successCallback: async () => {
-        await load();
-        setCreateModal(null);
-      },
-      errorCallback: (err) => console.error("Chyba:", err),
-    });
+  
+   await deleteItemCall({
+  dtoIn: id,
+  successMessage: "Položka byla úspěšně smazána",
+  errorMessage: "Chyba při mazání položky",
+  successCallback: async () => {
+    await load();
+  },
+});
   };
 
   const onClose = () => {
     setCreateModal({ open: false });
+    setEditModal({ open: false });
   };
 
   const tableData = useMemo(() => {
@@ -70,18 +100,21 @@ function GoodsProvider({ children }) {
             label: "Delete",
             onClick: () => handleDeleteItem(row.id),
             confirm: true,
-            collapsed: false,
+            collapsed: true,
           },
           {
             label: "Edit",
-            onClick: () => setEditModal({ open: true }),
-            confirm: true,
+            onClick: async () => {
+              const item = await loadOneItem(row.id);
+              if (item) setEditModal({ open: true });
+            },
+            confirm: false,
             collapsed: false,
           },
         ],
       };
     });
-  }, [data]);
+  }, [data, handleDeleteItem]);
 
   useEffect(() => {
     load();
@@ -96,15 +129,16 @@ function GoodsProvider({ children }) {
   const value = useMemo(
     () => ({
       data: tableData,
+      dataItem,
       alert,
       error,
       modals: { createModal, setCreateModal, editModal, setEditModal },
-
       reload: load,
       onClose: onClose,
       handleCreateItem,
+      handleEditItem,
     }),
-    [data, error, createModal, alert]
+    [data, error, createModal, alert, tableData, editModal, dataItem]
   );
 
   return (
