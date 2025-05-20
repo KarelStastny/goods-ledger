@@ -106,7 +106,7 @@ function Table({
           <tr>
             {columnsDefinition.map((col) => (
               <th key={col.key} style={Css.th}>
-                {col.Header}
+                {col.header}
               </th>
             ))}
             <th style={{ ...Css.th, textAlign: "right" }}>Actions</th>

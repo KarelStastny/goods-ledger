@@ -1,6 +1,7 @@
 //@@viewOn:imports
 import React, { useState } from "react";
 import COLORS from "../styles/palette";
+import Dropdown from "./Dropdown";
 //@@viewOff:imports
 
 //@@viewOn:css
@@ -50,15 +51,13 @@ const Css = {
 //@@viewOff:helpers
 
 function Form({ fields = [], onSubmit, initialValues }) {
-const [formData, setFormData] = useState(() => {
-  const base = fields.reduce(
-    (acc, field) => ({ ...acc, [field.name]: field.defaultValue || "" }),
-    {}
-  );
-  return { ...base, ...initialValues };
-});
-
-
+  const [formData, setFormData] = useState(() => {
+    const base = fields.reduce(
+      (acc, field) => ({ ...acc, [field.name]: field.defaultValue || "" }),
+      {}
+    );
+    return { ...base, ...initialValues };
+  });
 
   const handleChange = (e, name) => {
     setFormData((prev) => ({ ...prev, [name]: e.target.value }));
@@ -76,19 +75,38 @@ const [formData, setFormData] = useState(() => {
   //@@viewOn:render
   return (
     <form onSubmit={handleSubmit} style={Css.form}>
-      {fields.map((field) => (
-        <div key={field.name} style={Css.fieldWrapper}>
-          <label style={Css.label}>{field.label}</label>
-          <input
-            type={field.type || "text"}
-            value={formData[field.name]}
-            onChange={(e) => handleChange(e, field.name)}
-            placeholder={field.placeholder}
-            required={field.required}
-            style={Css.input}
-          />
-        </div>
-      ))}
+      {fields.map((field) => {
+        const fieldValue = formData[field.name] || "";
+
+        if (field.type === "dropdown") {
+          return (
+            <div key={field.name} style={Css.fieldWrapper}>
+              <label style={Css.label}>{field.label}</label>
+              <Dropdown
+                name={field.name}
+                value={fieldValue}
+                onChange={(e) => handleChange(e, field.name)}
+                itemList={field.itemList}
+                style={Css.input}
+              />
+            </div>
+          );
+        }
+
+        return (
+          <div key={field.name} style={Css.fieldWrapper}>
+            <label style={Css.label}>{field.label}</label>
+            <input
+              type={field.type || "text"}
+              value={fieldValue}
+              onChange={(e) => handleChange(e, field.name)}
+              placeholder={field.placeholder}
+              required={field.required}
+              style={Css.input}
+            />
+          </div>
+        );
+      })}
       <button type="submit" style={Css.submitButton}>
         Odeslat
       </button>

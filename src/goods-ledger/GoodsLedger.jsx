@@ -11,17 +11,35 @@ import EditForm from "./EditForm";
 
 //@@viewOn:constants
 const columnsDefinition = [
-  { Header: "Date", key: "buyDate" },
-  { Header: "ID", key: "id", cell: (row) => renderers.tooltip(row.id, 3) },
-  { Header: "Name", key: "name" },
-  { Header: "Quantity", key: "quantity" },
+  { header: "Date", key: "buyDate" },
+  { header: "ID", key: "id", cell: (row) => renderers.tooltip(row.id, 3) },
+  { header: "Name", key: "name" },
+  { header: "Typ", key: "type" },
+  { header: "Quantity", key: "quantity" },
   {
-    Header: "Nákupní cena",
+    header: "Nákupní cena",
     key: "buyPrice",
     cell: (row) => `${row.buyPrice} Kč`,
   },
-  { Header: "description", key: "description" },
-  { Header: "Zahájení prodeje", key: "saleStartDate" },
+  { header: "description", key: "description" },
+  {
+    header: "Zahájení prodeje",
+    key: "saleStart",
+    cell: (row) => (
+      <span
+        style={{
+          padding: "4px 8px",
+          borderRadius: "12px",
+          color: "#fff",
+          backgroundColor: row?.saleStart === "true" ? "#28a745" : "#dc3545",
+          fontSize: "12px",
+          fontWeight: "bold",
+        }}
+      >
+        {row?.saleStart === "true" ? "Aktivní" : "Neaktivní"}
+      </span>
+    ),
+  },
 ];
 //@@viewOff:constants
 
@@ -33,7 +51,16 @@ function GoodsLedger() {
   return (
     <div>
       <GoodsProvider>
-        {({ data, reload, modals, onClose, handleCreateItem, alert, handleEditItem, dataItem, }) => {
+        {({
+          data,
+          reload,
+          modals,
+          onClose,
+          handleCreateItem,
+          alert,
+          handleEditItem,
+          dataItem,
+        }) => {
           return (
             <div>
               <Table

@@ -41,11 +41,11 @@ function GoodsProvider({ children }) {
     try {
       const item = await getItem(id);
       setDataItem(item);
-      return item; // přidáno
+      return item; 
     } catch (e) {
       console.error("Load failed:", e);
       setError(e);
-      return null; // přidáno
+      return null; 
     }
   };
 
@@ -61,27 +61,26 @@ function GoodsProvider({ children }) {
       errorCallback: (err) => console.error("Chyba:", err),
     });
   };
-const handleEditItem = async (formData) => {
-  await editItemCall({
-    dtoIn: { id: dataItem.id, updatedData: formData },
-    successMessage: "Položka byla upravena.",
-    errorMessage: "Úprava selhala.",
-    successCallback: () => {
-      load();
-      onClose();
-    },
-  });
-};
+  const handleEditItem = async (formData) => {
+    await editItemCall({
+      dtoIn: { id: dataItem.id, updatedData: formData },
+      successMessage: "Položka byla upravena.",
+      errorMessage: "Úprava selhala.",
+      successCallback: () => {
+        load();
+        onClose();
+      },
+    });
+  };
   const handleDeleteItem = async (id) => {
-  
-   await deleteItemCall({
-  dtoIn: id,
-  successMessage: "Položka byla úspěšně smazána",
-  errorMessage: "Chyba při mazání položky",
-  successCallback: async () => {
-    await load();
-  },
-});
+    await deleteItemCall({
+      dtoIn: id,
+      successMessage: "Položka byla úspěšně smazána",
+      errorMessage: "Chyba při mazání položky",
+      successCallback: async () => {
+        await load();
+      },
+    });
   };
 
   const onClose = () => {
@@ -115,6 +114,8 @@ const handleEditItem = async (formData) => {
       };
     });
   }, [data, handleDeleteItem]);
+
+  console.log(tableData)
 
   useEffect(() => {
     load();
