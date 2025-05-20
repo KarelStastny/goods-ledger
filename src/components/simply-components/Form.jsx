@@ -53,7 +53,7 @@ const Css = {
 function Form({ fields = [], onSubmit, initialValues }) {
   const [formData, setFormData] = useState(() => {
     const base = fields.reduce(
-      (acc, field) => ({ ...acc, [field.name]: field.defaultValue || "" }),
+      (acc, field) => ({ ...acc, [field?.name]: field.defaultValue || "" }),
       {}
     );
     return { ...base, ...initialValues };
